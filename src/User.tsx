@@ -21,7 +21,11 @@ const EVENT_TYPES = [
 	{ id: "catering", label: "Catering" },
 ];
 
-function User() {
+interface UserProps {
+	setShowModal: (show: boolean) => void;
+}
+
+function User({ setShowModal }: UserProps) {
 	const { user: authUser, loading: authLoading, signOut } = useAuth();
 	const [user, setUser] = useState<UserData | null>(null);
 	const [loading, setLoading] = useState(true);
@@ -149,11 +153,19 @@ function User() {
 
 	return (
 		<div className="max-w-4xl mx-auto px-4 py-8">
-			<header className="mb-8 p-6 bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center text-[#1B5E20] gap-2">
-				<h1 className="text-3xl font-extrabold m-0">Profile Settings</h1>
-				<p className="text-[#2E7D32] text-lg sm:text-right m-0">
-					Manage your preferences
-				</p>
+			<header className="mb-8 p-6 bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center text-[#1B5E20] gap-4">
+				<div>
+					<h1 className="text-3xl font-extrabold m-0">Profile Settings</h1>
+					<p className="text-[#2E7D32] text-lg m-0 mt-1">
+						Manage your preferences
+					</p>
+				</div>
+				<button
+					className="py-3 px-6 bg-[#1B5E20] text-white border-none rounded-xl font-bold cursor-pointer transition-all duration-200 hover:bg-[#2E7D32] hover:shadow-md active:scale-95 flex items-center justify-center gap-2"
+					onClick={() => setShowModal(true)}
+				>
+					<span className="text-xl leading-none">+</span> Create Event
+				</button>
 			</header>
 
 			<main className="flex flex-col gap-8">
