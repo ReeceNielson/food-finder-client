@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from './hooks/useAuth'
+import { useApi } from '@/hooks/useApi'
 
 interface UserData {
   id: number
@@ -22,6 +23,7 @@ const EVENT_TYPES = [
 
 function User() {
   const { user: authUser, loading: authLoading, signOut } = useAuth()
+  const api = useApi()
   const [user, setUser] = useState<UserData | null>(null)
   const [loading, setLoading] = useState(true)
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
@@ -38,12 +40,11 @@ function User() {
   const fetchUserData = async () => {
     try {
       // Replace with your actual API endpoint
-      const response = await fetch('/api/user/')
-      if (response.ok) {
-        const data = await response.json()
-        setUser(data)
-        setNotificationsEnabled(data.notifications_enabled)
-        setSelectedEventTypes(data.event_preferences || [])
+      const response = await api.get<UserData>('/profile/')
+      if (response.success) {
+        setUser(response.data)
+        setNotificationsEnabled(response.data.notifications_enabled)
+        setSelectedEventTypes(response.data.event_preferences || [])
       }
     } catch (error) {
       console.log(
@@ -80,16 +81,7 @@ function User() {
     setMessage('')
 
     try {
-      const response = await fetch('/api/user/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          notifications_enabled: notificationsEnabled,
-          event_preferences: selectedEventTypes,
-        }),
-      })
+      const response = await api.put<UserData>('/profile/', user)
 
       if (response.ok) {
         setMessage('Settings saved successfully!')
