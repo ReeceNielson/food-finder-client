@@ -2,59 +2,38 @@ import { useState, useEffect } from 'react'
 import { useApi } from './hooks/useApi'
 
 interface Event {
-  id: number
+  id: string          // uuid, not number
   title: string
   description: string
   date: string
   time: string
   location: string
+  types: string[]     // was event_type?: string
+  is_expired: boolean
+  notification_sent: boolean
+}
+
+interface EventsResponse {
+  events: Event[]
 }
 
 interface EventsProps {
   refreshTrigger: number
 }
 
-function Events({ refreshTrigger }: EventsProps) {
+function Events({ refreshTrigger: _refreshTrigger }: EventsProps) {
   const api = useApi()
   const [events, setEvents] = useState<Event[]>([])
 
   const fetchEvents = async () => {
     try {
-      // Replace with your actual API endpoint
-      const response = await api.get<Event[]>('/events/')
+      const response = await api.get<EventsResponse>('/events/')
       if (response.success) {
-        const eventList = response.data || []
+        const eventList = (response.data as EventsResponse).events || []
         setEvents(eventList)
       }
     } catch (error) {
-      console.log('Loading with sample data', error)
-      // Sample data for development
-      setEvents([
-        {
-          id: 1,
-          title: 'Community Potluck',
-          description: 'Join us for a delicious community potluck dinner',
-          date: '2026-03-15',
-          time: '18:00',
-          location: 'Central Park',
-        },
-        {
-          id: 2,
-          title: 'Food Truck Rally',
-          description: 'Amazing food trucks from around the city',
-          date: '2026-03-20',
-          time: '12:00',
-          location: 'Downtown Plaza',
-        },
-        {
-          id: 3,
-          title: 'Cooking Workshop',
-          description: 'Learn to cook international cuisines',
-          date: '2026-03-25',
-          time: '19:30',
-          location: 'Community Center',
-        },
-      ])
+      console.error('Error fetching events:', error)
     }
   }
 
@@ -63,32 +42,6 @@ function Events({ refreshTrigger }: EventsProps) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchEvents()
   }, [])
-
-  const handleCreateEvent = async () => {
-    if (!newEvent.title || !newEvent.date || !newEvent.time) {
-      alert('Please fill in required fields')
-      return
-    }
-
-    try {
-      const response = await api.post('/events/', newEvent)
-
-      if (response.success) {
-        setEvents([...events, response.data as Event])
-        setShowModal(false)
-        setNewEvent({
-          title: '',
-          description: '',
-          date: '',
-          time: '',
-          location: '',
-        })
-      }
-    } catch (error) {
-      console.error('Error creating event:', error)
-      alert('Error creating event')
-    }
-  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">

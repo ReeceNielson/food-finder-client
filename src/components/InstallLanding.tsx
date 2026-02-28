@@ -14,7 +14,7 @@ export function InstallLanding() {
 
                 <div className="mb-8 rounded-xl overflow-hidden border border-white/10">
                     <img
-                        src="/install-guide.gif"
+                        src={`${import.meta.env.BASE_URL}install-guide.gif`}
                         alt="How to install the app"
                         className="w-full rounded-xl"
                     />

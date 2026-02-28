@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { getFcmToken } from '../lib/getFcm';
+import { useApi } from '../hooks/useApi';
 
 interface NotificationPromptProps {
     onComplete: () => void;
 }
 
 export function NotificationPrompt({ onComplete }: NotificationPromptProps) {
+    const api = useApi();
     const [preference, setPreference] = useState<number | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -14,20 +16,32 @@ export function NotificationPrompt({ onComplete }: NotificationPromptProps) {
         setLoading(true);
         try {
             const result = await getFcmToken();
-            if (result.success) {
+            if (result.success && result.token) {
                 console.log("FCM Token earned:", result.token, "Preference:", preference);
-                // TODO: Upsert token and preference to Supabase here
-                onComplete();
+
+                // Push FCM token and preference to the backend
+                const response = await api.post('/profile/', {
+                    fcm_token: result.token,
+                    notify: true,
+                    notification_preference: preference,
+                });
+
+                if (response.success) {
+                    console.log("FCM token saved to profile");
+                    onComplete();
+                } else {
+                    console.error("Failed to save FCM token:", response.error);
+                    alert("Failed to save notification settings. Please try again.");
+                }
             } else {
                 console.error("Failed to get token:", result.message);
-                // For dev ease, let's close it even if permission denied, 
-                // or maybe let them explicitly click "Maybe Later"
                 if (result.message === 'permission_denied') {
                     alert("You must allow notifications in your browser settings to continue.");
                 }
             }
         } catch (e) {
             console.error(e);
+            alert("An error occurred while enabling notifications.");
         } finally {
             setLoading(false);
         }

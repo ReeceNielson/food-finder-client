@@ -8,7 +8,7 @@ import { AuthProvider } from './providers/AuthProvider.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/food-finder-client">
         <App />
       </BrowserRouter>
     </AuthProvider>

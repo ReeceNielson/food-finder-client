@@ -8,12 +8,6 @@ import type { AuthContextType } from '../contexts/AuthContext'
 import { AuthContext } from '../contexts/AuthContext'
 import { apiService } from '../services/ApiService'
 
-interface ApiResponse<T = unknown> {
-  success: boolean
-  data?: T
-  error?: string
-  status: number
-}
 
 export function useApi() {
   const authContext = useContext(AuthContext)

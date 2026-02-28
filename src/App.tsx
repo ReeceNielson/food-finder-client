@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
+import { useApi } from './hooks/useApi'
 import { isMobile, isPWA } from './lib/deviceDetection'
 import { InstallLanding } from './components/InstallLanding'
 import { AuthLanding } from './components/AuthLanding'
@@ -11,6 +12,7 @@ import Navigation from './Navigation'
 
 function App() {
   const { user, loading } = useAuth()
+  const api = useApi()
   const [showModal, setShowModal] = useState(false)
   const [eventRefreshTrigger, setEventRefreshTrigger] = useState(0)
 
@@ -29,15 +31,9 @@ function App() {
     }
 
     try {
-      const response = await fetch('/api/events/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newEvent),
-      })
+      const response = await api.post('/events/', newEvent as unknown as Record<string, unknown>)
 
-      if (response.ok) {
+      if (response.success) {
         setEventRefreshTrigger(prev => prev + 1)
         setShowModal(false)
         setNewEvent({
@@ -47,6 +43,8 @@ function App() {
           time: '',
           location: '',
         })
+      } else {
+        alert('Error creating event')
       }
     } catch (error) {
       console.error('Error creating event:', error)
@@ -56,7 +54,7 @@ function App() {
 
   // Notification Modal State
   const [userDataLoading, setUserDataLoading] = useState(true)
-  const [showNotificationPrompt, setShowNotificationPrompt] = useState(true)
+  const [showNotificationPrompt, setShowNotificationPrompt] = useState(false)
 
   useEffect(() => {
     if (user && !loading) {
@@ -69,7 +67,7 @@ function App() {
         // Simulating the user passing the FCM check (FCM_token is null, mobile device)
         const isFcmTokenNull = true
         if (isFcmTokenNull && isMobile()) {
-          setShowNotificationPrompt(true)
+          setShowNotificationPrompt(false)
         }
         setUserDataLoading(false)
       }

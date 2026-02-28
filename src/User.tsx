@@ -4,20 +4,28 @@ import { getFcmToken } from "./lib/getFcm";
 import { useApi } from './hooks/useApi'
 
 interface UserData {
-	id: number;
-	username: string;
-	email: string;
+	id: string;
+	notify: boolean;
 	social_credit: number;
-	notifications_enabled: boolean;
-	event_preferences: string[];
+	event_types: string[];
+	event_ids: string[];
+	created_at: string;
+	fcm_token: string | null;
+	tier: string;
+}
+
+interface UserDataResponse {
+	user_data: UserData[];
 }
 
 const EVENT_TYPES = [
+	{ id: "free_food", label: "Free Food" },
+	{ id: "tech_talk", label: "Tech Talk" },
 	{ id: "potluck", label: "Potluck" },
-	{ id: "food-truck", label: "Food Truck Rally" },
-	{ id: "cooking-workshop", label: "Cooking Workshop" },
-	{ id: "restaurant-promo", label: "Restaurant Promotion" },
-	{ id: "farmers-market", label: "Farmers Market" },
+	{ id: "food_truck", label: "Food Truck Rally" },
+	{ id: "cooking_workshop", label: "Cooking Workshop" },
+	{ id: "restaurant_promo", label: "Restaurant Promotion" },
+	{ id: "farmers_market", label: "Farmers Market" },
 	{ id: "bbq", label: "BBQ" },
 	{ id: "catering", label: "Catering" },
 ];
@@ -26,7 +34,7 @@ interface UserProps {
 	setShowModal: (show: boolean) => void;
 }
 
-function User() {
+function User({ setShowModal: _setShowModal }: UserProps) {
   const { user: authUser, loading: authLoading, signOut } = useAuth()
   const api = useApi()
   const [user, setUser] = useState<UserData | null>(null)
@@ -46,31 +54,15 @@ const [fcmToken, setFcmToken] = useState<string | null>(null);
 
   const fetchUserData = async () => {
     try {
-      // Replace with your actual API endpoint
-      const response = await api.get<UserData>('/profile/')
+      const response = await api.get<UserDataResponse>('/profile/')
       if (response.success) {
-        const userData = response.data as UserData
+        const userData = (response.data as UserDataResponse).user_data[0]
         setUser(userData)
-        setNotificationsEnabled(userData.notifications_enabled)
-        setSelectedEventTypes(userData.event_preferences || [])
+        setNotificationsEnabled(userData.notify)
+        setSelectedEventTypes(userData.event_types || [])
       }
     } catch (error) {
-      console.log(
-        'Using sample user data for development',
-        error
-      )
-      // Sample data for development
-      const sampleUser: UserData = {
-        id: 1,
-        username: 'foodlover',
-        email: 'foodlover@example.com',
-        social_credit: 150,
-        notifications_enabled: true,
-        event_preferences: ['potluck', 'food-truck', 'farmers-market'],
-      }
-      setUser(sampleUser)
-      setNotificationsEnabled(sampleUser.notifications_enabled)
-      setSelectedEventTypes(sampleUser.event_preferences)
+      console.error('Error fetching user data:', error)
     } finally {
       setLoading(false)
     }
@@ -89,9 +81,12 @@ const [fcmToken, setFcmToken] = useState<string | null>(null);
 		setMessage("");
 
     try {
-      const response = await api.post<UserData>('/profile/', user)
+      const response = await api.post<UserData>('/profile/', {
+        notify: notificationsEnabled,
+        event_types: selectedEventTypes,
+      })
 
-			if (response.ok) {
+			if (response.success) {
 				setMessage("Settings saved successfully!");
 				setTimeout(() => setMessage(""), 3000);
 			} else {
@@ -157,12 +152,6 @@ const [fcmToken, setFcmToken] = useState<string | null>(null);
 						Manage your preferences
 					</p>
 				</div>
-				<button
-					className="py-3 px-6 bg-[#1B5E20] text-white border-none rounded-xl font-bold cursor-pointer transition-all duration-200 hover:bg-[#2E7D32] hover:shadow-md active:scale-95 flex items-center justify-center gap-2"
-					onClick={() => setShowModal(true)}
-				>
-					<span className="text-xl leading-none">+</span> Create Event
-				</button>
 			</header>
 
 			<main className="flex flex-col gap-8">
@@ -197,18 +186,26 @@ const [fcmToken, setFcmToken] = useState<string | null>(null);
 						<div className="flex flex-col gap-5 text-left">
 							<div className="flex flex-col gap-1.5">
 								<label className="text-xs font-bold text-[#2E7D32] uppercase tracking-wider">
-									Username
+									Email
 								</label>
 								<div className="text-lg font-medium text-[#1B5E20] bg-gray-50 px-4 py-3 rounded-xl border border-gray-100">
-									{user.username}
+									{authUser.email}
 								</div>
 							</div>
 							<div className="flex flex-col gap-1.5">
 								<label className="text-xs font-bold text-[#2E7D32] uppercase tracking-wider">
-									Email
+									Tier
+								</label>
+								<div className="text-lg font-medium text-[#1B5E20] bg-gray-50 px-4 py-3 rounded-xl border border-gray-100 capitalize">
+									{user.tier}
+								</div>
+							</div>
+							<div className="flex flex-col gap-1.5">
+								<label className="text-xs font-bold text-[#2E7D32] uppercase tracking-wider">
+									Member Since
 								</label>
 								<div className="text-lg font-medium text-[#1B5E20] bg-gray-50 px-4 py-3 rounded-xl border border-gray-100">
-									{user.email}
+									{new Date(user.created_at).toLocaleDateString()}
 								</div>
 							</div>
 						</div>
