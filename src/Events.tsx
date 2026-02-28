@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useApi } from './hooks/useApi'
 
 interface Event {
   id: number
@@ -15,6 +16,7 @@ interface EventsProps {
 }
 
 function Events({ showModal, setShowModal }: EventsProps) {
+  const api = useApi()
   const [events, setEvents] = useState<Event[]>([])
   const [newEvent, setNewEvent] = useState({
     title: '',
@@ -27,10 +29,10 @@ function Events({ showModal, setShowModal }: EventsProps) {
   const fetchEvents = async () => {
     try {
       // Replace with your actual API endpoint
-      const response = await fetch('/api/events/')
-      if (response.ok) {
-        const data = await response.json()
-        setEvents(data)
+      const response = await api.get<Event[]>('/events/')
+      if (response.success) {
+        const eventList = response.data || []
+        setEvents(eventList)
       }
     } catch (error) {
       console.log('Loading with sample data', error)
@@ -77,17 +79,10 @@ function Events({ showModal, setShowModal }: EventsProps) {
     }
 
     try {
-      const response = await fetch('/api/events/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newEvent),
-      })
+      const response = await api.post('/events/', newEvent)
 
-      if (response.ok) {
-        const createdEvent = await response.json()
-        setEvents([...events, createdEvent])
+      if (response.success) {
+        setEvents([...events, response.data as Event])
         setShowModal(false)
         setNewEvent({
           title: '',

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from './hooks/useAuth'
-import { useApi } from '@/hooks/useApi'
+import { useApi } from './hooks/useApi'
 
 interface UserData {
   id: number
@@ -42,9 +42,10 @@ function User() {
       // Replace with your actual API endpoint
       const response = await api.get<UserData>('/profile/')
       if (response.success) {
-        setUser(response.data)
-        setNotificationsEnabled(response.data.notifications_enabled)
-        setSelectedEventTypes(response.data.event_preferences || [])
+        const userData = response.data as UserData
+        setUser(userData)
+        setNotificationsEnabled(userData.notifications_enabled)
+        setSelectedEventTypes(userData.event_preferences || [])
       }
     } catch (error) {
       console.log(
@@ -81,7 +82,7 @@ function User() {
     setMessage('')
 
     try {
-      const response = await api.put<UserData>('/profile/', user)
+      const response = await api.post<UserData>('/profile/', user)
 
       if (response.ok) {
         setMessage('Settings saved successfully!')
