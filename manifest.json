@@ -2,7 +2,7 @@
     "name": "Food Finder",
     "short_name": "FoodApp",
     "description": "Discover local food gatherings",
-    "start_url": "/",
+    "start_url": "/food-finder-client/",
     "display": "standalone",
     "background_color": "#1B5E20",
     "theme_color": "#2E7D32",
