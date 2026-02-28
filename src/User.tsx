@@ -81,7 +81,7 @@ function User() {
 
     try {
       const response = await fetch('/api/user/', {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
