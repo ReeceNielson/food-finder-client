@@ -12,13 +12,22 @@ export function InstallLanding() {
                     For the best experience, please install this application on your home screen.
                 </p>
 
+                <div className="mb-8 rounded-xl overflow-hidden border border-white/10">
+                    <img
+                        src="/install-guide.gif"
+                        alt="How to install the app"
+                        className="w-full rounded-xl"
+                    />
+                </div>
+
                 <div className="text-left bg-black/20 p-6 rounded-xl border border-white/5">
                     {os === 'ios' && (
                         <div className="mb-4">
                             <h3 className="text-[#81C784] mb-4 text-xl font-semibold">To install on iOS:</h3>
                             <ol className="pl-6 text-gray-200 list-decimal">
-                                <li className="mb-3 leading-relaxed text-lg">Tap the <strong>Share</strong> button at the bottom of Safari (<span className="inline-block align-middle bg-white/10 px-2 py-0.5 rounded-md text-base">⬇️</span>)</li>
-                                <li className="mb-3 leading-relaxed text-lg">Scroll down and tap <strong>Add to Home Screen</strong> (<span className="inline-block align-middle bg-white/10 px-2 py-0.5 rounded-md text-base">➕</span>)</li>
+                                <li className="mb-3 leading-relaxed text-lg">Tap the <strong>Share</strong> button at the bottom of Safari (<span className="inline-block align-middle bg-white/10 px-2 py-0.5 rounded-md text-base">⬆️</span>)</li>
+                                <li className="mb-3 leading-relaxed text-lg">Scroll down and tap <strong>View More</strong></li>
+                                <li className="mb-3 leading-relaxed text-lg">Tap <strong>Add to Home Screen</strong> (<span className="inline-block align-middle bg-white/10 px-2 py-0.5 rounded-md text-base">➕</span>)</li>
                                 <li className="mb-3 leading-relaxed text-lg">Tap <strong>Add</strong> in the top right corner.</li>
                             </ol>
                         </div>
@@ -28,9 +37,10 @@ export function InstallLanding() {
                         <div className="mb-4">
                             <h3 className="text-[#81C784] mb-4 text-xl font-semibold">To install on Android:</h3>
                             <ol className="pl-6 text-gray-200 list-decimal">
-                                <li className="mb-3 leading-relaxed text-lg">Tap the <strong>Menu</strong> icon (three dots) in the top right corner</li>
-                                <li className="mb-3 leading-relaxed text-lg">Tap <strong>Install App</strong> or <strong>Add to Home screen</strong></li>
-                                <li className="mb-3 leading-relaxed text-lg">Follow the on-screen prompt to install.</li>
+                                <li className="mb-3 leading-relaxed text-lg">Tap the <strong>Share</strong> button at the bottom of your browser (<span className="inline-block align-middle bg-white/10 px-2 py-0.5 rounded-md text-base">⬆️</span>)</li>
+                                <li className="mb-3 leading-relaxed text-lg">Scroll down and tap <strong>View More</strong></li>
+                                <li className="mb-3 leading-relaxed text-lg">Tap <strong>Add to Home Screen</strong> (<span className="inline-block align-middle bg-white/10 px-2 py-0.5 rounded-md text-base">➕</span>)</li>
+                                <li className="mb-3 leading-relaxed text-lg">Tap <strong>Add</strong> in the top right corner.</li>
                             </ol>
                         </div>
                     )}
@@ -38,7 +48,12 @@ export function InstallLanding() {
                     {os === 'other' && (
                         <div className="mb-4">
                             <h3 className="text-[#81C784] mb-4 text-xl font-semibold">To install:</h3>
-                            <p className="text-gray-200 text-lg">Look for an "Install App" or "Add to Home Screen" option in your browser menu.</p>
+                            <ol className="pl-6 text-gray-200 list-decimal">
+                                <li className="mb-3 leading-relaxed text-lg">Tap the <strong>Share</strong> button in your browser (<span className="inline-block align-middle bg-white/10 px-2 py-0.5 rounded-md text-base">⬆️</span>)</li>
+                                <li className="mb-3 leading-relaxed text-lg">Scroll down and tap <strong>View More</strong></li>
+                                <li className="mb-3 leading-relaxed text-lg">Tap <strong>Add to Home Screen</strong> (<span className="inline-block align-middle bg-white/10 px-2 py-0.5 rounded-md text-base">➕</span>)</li>
+                                <li className="mb-3 leading-relaxed text-lg">Tap <strong>Add</strong> in the top right corner.</li>
+                            </ol>
                         </div>
                     )}
                 </div>
