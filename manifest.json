@@ -1,6 +1,6 @@
 {
-    "name": "Food Finder",
-    "short_name": "FoodApp",
+    "name": "Free Food Finder",
+    "short_name": "Free Food",
     "description": "Discover local food gatherings",
     "start_url": "/food-finder-client/",
     "display": "standalone",
