@@ -53,7 +53,7 @@ export const getFcmToken = async (): Promise<fcm_token_response> => {
 			console.log("Notification permission granted.");
 			// Explicitly register the service worker
 			const registration = await navigator.serviceWorker.register(
-				"/firebase-messaging-sw.js",
+				"/food-finder-client/firebase-messaging-sw.js",
 			);
 
 			// Get the token, passing the service worker registration

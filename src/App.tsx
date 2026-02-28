@@ -43,6 +43,17 @@ function App() {
           time: '',
           location: '',
         })
+
+        // Add 10 social credit points for creating an event
+        try {
+          const profileRes = await api.get<{ user_data: { social_credit: number }[] }>('/profile/')
+          if (profileRes.success) {
+            const currentCredit = (profileRes.data as { user_data: { social_credit: number }[] }).user_data[0].social_credit
+            await api.post('/profile/', { social_credit: currentCredit + 10 })
+          }
+        } catch (err) {
+          console.error('Error adding social credit:', err)
+        }
       } else {
         alert('Error creating event')
       }
