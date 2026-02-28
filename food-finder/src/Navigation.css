@@ -1,0 +1,119 @@
+/* Color Palette */
+:root {
+  --color-purple: #9D8DF1;
+  --color-sage: #C6D8D3;
+  --color-olive: #676F54;
+  --color-orange: #CF5C36;
+  --color-dark: #28262C;
+  --color-white: #FFFFFF;
+}
+
+.navbar {
+  background: linear-gradient(90deg, var(--color-dark) 0%, var(--color-olive) 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  border-bottom: 3px solid var(--color-orange);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.navbar-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-white);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.navbar-logo:active {
+  transform: scale(0.98);
+}
+
+.navbar-menu {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: var(--color-white);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-link:active {
+  background-color: rgba(207, 92, 54, 0.2);
+}
+
+.nav-link.active {
+  color: var(--color-orange);
+  background-color: rgba(207, 92, 54, 0.15);
+  border-bottom: 2px solid var(--color-orange);
+  padding-bottom: 0.4rem;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 0.8rem 1.2rem;
+  }
+
+  .navbar-logo {
+    font-size: 1.25rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-container {
+    padding: 1.2rem 2rem;
+  }
+
+  .navbar-logo {
+    font-size: 1.75rem;
+  }
+
+  .nav-link {
+    padding: 0.7rem 1.5rem;
+  }
+
+  .nav-link:hover {
+    background-color: rgba(207, 92, 54, 0.1);
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar-container {
+    padding: 1.5rem 2rem;
+  }
+
+  .navbar-logo {
+    font-size: 2rem;
+  }
+
+  .nav-link {
+    padding: 0.8rem 1.8rem;
+    font-size: 1.05rem;
+  }
+}
