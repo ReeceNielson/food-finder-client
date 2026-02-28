@@ -58,18 +58,21 @@ function App() {
 
   useEffect(() => {
     if (user && !loading) {
-      // Simulate fetching user data from Supabase 
-      // (Pre-req for checking if FCM_token is null)
       const fetchUserData = async () => {
         setUserDataLoading(true)
-        await new Promise(resolve => setTimeout(resolve, 1500)) // 1.5s simulated delay
-
-        // Simulating the user passing the FCM check (FCM_token is null, mobile device)
-        const isFcmTokenNull = true
-        if (isFcmTokenNull && isMobile()) {
-          setShowNotificationPrompt(false)
+        try {
+          const response = await api.get<{ user_data: { fcm_token: string | null }[] }>('/profile/')
+          if (response.success) {
+            const userData = (response.data as { user_data: { fcm_token: string | null }[] }).user_data[0]
+            if (!userData.fcm_token && isMobile()) {
+              setShowNotificationPrompt(true)
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error)
+        } finally {
+          setUserDataLoading(false)
         }
-        setUserDataLoading(false)
       }
       fetchUserData()
     }

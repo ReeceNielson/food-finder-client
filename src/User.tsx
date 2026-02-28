@@ -161,8 +161,22 @@ const [fcmToken, setFcmToken] = useState<string | null>(null);
 							type="button"
 							className="bg-[#2E7D32] text-white px-4 py-2 rounded-xl"
 							onClick={async () => {
-								const token = await getFcmToken();
-								setFcmToken(token.token || null);
+								const result = await getFcmToken();
+								if (result.success && result.token) {
+									setFcmToken(result.token);
+									const response = await api.post('/profile/', {
+										fcm_token: result.token,
+									} as Record<string, unknown>);
+									if (response.success) {
+										setMessage('FCM token saved successfully!');
+										setTimeout(() => setMessage(''), 3000);
+									} else {
+										setMessage('Error saving FCM token');
+										setTimeout(() => setMessage(''), 3000);
+									}
+								} else {
+									setFcmToken(null);
+								}
 							}}
 						>
 							Get FCM Token

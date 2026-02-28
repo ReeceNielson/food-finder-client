@@ -16,29 +16,23 @@ export function NotificationPrompt({ onComplete }: NotificationPromptProps) {
         setLoading(true);
         try {
             const result = await getFcmToken();
+            console.log("FCM Token result:", result);
             if (result.success && result.token) {
                 console.log("FCM Token earned:", result.token, "Preference:", preference);
 
                 // Push FCM token and preference to the backend
                 const response = await api.post('/profile/', {
                     fcm_token: result.token,
-                    notify: true,
-                    notification_preference: preference,
                 });
 
                 if (response.success) {
                     console.log("FCM token saved to profile");
-                    onComplete();
-                } else {
-                    console.error("Failed to save FCM token:", response.error);
-                    alert("Failed to save notification settings. Please try again.");
                 }
             } else {
                 console.error("Failed to get token:", result.message);
-                if (result.message === 'permission_denied') {
-                    alert("You must allow notifications in your browser settings to continue.");
-                }
             }
+            // Always close the modal after attempting
+            onComplete();
         } catch (e) {
             console.error(e);
             alert("An error occurred while enabling notifications.");
